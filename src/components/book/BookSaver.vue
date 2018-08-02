@@ -25,7 +25,7 @@
                         <input
                                 type="text"
                                 name="title"
-                                v-model="bookTitle"
+                                v-model.trim="bookTitle"
                                 data-vv-as="Название книги"
                                 placeholder="Алмазный меч, деревянный меч"
                                 v-validate="'required|max:30'">
@@ -35,7 +35,7 @@
                         <input
                                 type="text"
                                 name="publisher_name"
-                                v-model="publisherName"
+                                v-model.trim="publisherName"
                                 placeholder="Эксмо"
                                 data-vv-as="Название издательства"
                                 v-validate="'max:30'">
@@ -45,7 +45,7 @@
                         <input
                                 type="text"
                                 name="ISBN"
-                                v-model="ISBN"
+                                v-model.trim="ISBN"
                                 placeholder="978-5-699-77398-5"
                                 v-validate="{regex: /^(?:ISBN(?:-1[03])?:? )?(?=[-0-9 ]{17}$|[-0-9X ]{13}$|↵[0-9X]{10}$)(?:97[89][- ]?)?[0-9]{1,5}[- ]?(?:[0-9]+[- ]?){2}[0-9X]$/}">
                     </label>
@@ -55,7 +55,7 @@
                             <input
                                     type="text"
                                     :name="`author_name_${author.id}`"
-                                    v-model="author.name"
+                                    v-model.trim="author.name"
                                     data-vv-as="Имя автор"
                                     placeholder="Ник"
                                     v-validate="{required: (author.id === 1), max: 20, regex: /^([a-zA-Zа-яА-Я]+)$/}">
@@ -63,7 +63,7 @@
                                     type="text"
                                     :name="`author_surname_${author.id}`"
                                     data-vv-as="Фамилия автора"
-                                    v-model="author.surname"
+                                    v-model.trim="author.surname"
                                     placeholder="Перумов"
                                     v-validate="{required: (author.id === 1), max: 20, regex: /^([a-zA-Zа-яА-Я]+)$/}">
                             <button
@@ -85,7 +85,7 @@
                                 type="text"
                                 name="pages"
                                 placeholder="784"
-                                v-model="pages"
+                                v-model.trim="pages"
                                 data-vv-as="Количество страниц"
                                 v-validate="'required|between:1,10000'">
                     </label>
@@ -95,7 +95,7 @@
                                 type="text"
                                 name="year"
                                 placeholder="2014"
-                                v-model="year"
+                                v-model.trim="year"
                                 data-vv-as="Год публикации"
                                 v-validate="'date_format:YYYY|after:1799'">
                     </label>
@@ -105,7 +105,7 @@
                                 type="text"
                                 name="circulation_date"
                                 data-vv-as="Дата выхода в тираж"
-                                v-model="circulationDate"
+                                v-model.trim="circulationDate"
                                 placeholder="13.12.2014"
                                 v-validate="'date_format:DD.MM.YYYY|after:31.12.1799'">
                     </label>
@@ -128,6 +128,11 @@
                 Удалить книгу
             </button>
         </form>
+        <router-link
+                class="btn back_link icon_back"
+                :to="{name: 'home'}">
+            Вернуться к списку книг
+        </router-link>
     </div>
 </template>
 
@@ -145,11 +150,7 @@
                 publisherName: '',
                 year: '',
                 bookTitle: '',
-                authors: [{
-                    id: 1,
-                    name: '',
-                    surname: ''
-                }],
+                authors: [],
                 imgSrc: '',
                 authorID: 1
             }
@@ -165,14 +166,29 @@
         },
         created() {
             if (this.isBook) {
-                this.ISBN = this.book.ISBN
-                this.circulationDate = this.book.circulationDate
-                this.pages = this.book.pages
-                this.publisherName = this.book.publisherName
-                this.bookTitle = this.book.title
-                this.authors = this.book.authors
-                this.imgSrc = this.book.img
-                this.year = this.book.year
+                let book = this.book,
+                    authors = []
+                book.authors.forEach((item) => {
+                    authors.push({
+                        id: item.id,
+                        name: item.name,
+                        surname: item.surname
+                    })
+                })
+                this.ISBN = book.ISBN
+                this.circulationDate = book.circulationDate
+                this.pages = book.pages
+                this.publisherName = book.publisherName
+                this.bookTitle = book.title
+                this.authors = authors
+                this.imgSrc = book.img
+                this.year = book.year
+            } else {
+                this.authors.unshift({
+                    id: 1,
+                    name: '',
+                    surname: ''
+                })
             }
         },
         methods: {

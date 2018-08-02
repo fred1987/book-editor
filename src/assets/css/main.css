@@ -40,51 +40,44 @@ p {
 .btn {
     display: table;
     text-decoration: none;
+    position: relative;
     color: #fff;
-    border: none;
     outline: none;
-    line-height: 35px;
+    border: 0;
+    line-height: 36px;
     padding: 0 11px;
     cursor: pointer;
     background-color: #0275d8;
-    border-color: #0275d8;
     transition: all .3s ease;
 }
 
 .btn:hover {
     background-color: #025aa5;
-    border-color: #01549b;
 }
 
 .btn.danger {
     color: #fff;
     background-color: #d9534f;
-    border-color: #d9534f;
 }
 
 .btn.danger:hover {
     background-color: #c9302c;
-    border-color: #c12e2a;
 }
 
 .btn.success {
     background-color: #5cb85c;
-    border-color: #5cb85c;
 }
 
 .btn.success:hover {
     background-color: #449d44;
-    border-color: #419641;
 }
 
 .btn.info {
     background-color: #5bc0de;
-    border-color: #5bc0de;
 }
 
 .btn.info:hover {
     background-color: #31b0d5;
-    border-color: #2aabd2;
 }
 
 input::-webkit-input-placeholder,
@@ -146,6 +139,26 @@ main {
     min-height: calc(100vh - 210px);
     margin: 20px 0;
     padding: 0 20px;
+}
+
+.back_link {
+    margin: 20px 0 0 0 !important;
+    padding: 0 11px 0 36px;
+    float: none !important;
+    background-color: #90918E;
+}
+
+.back_link:hover {
+    background-color: #797A77;
+}
+
+.back_link:before {
+    content: '\ea40';
+    display: block;
+    position: absolute;
+    color: #fff;
+    left: 11px;
+    top: 10px;
 }
 
 footer {

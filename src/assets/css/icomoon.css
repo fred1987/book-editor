@@ -43,3 +43,7 @@
 .icon-ctrl:before {
     content: "\ea50";
 }
+
+.icon_arrow_left2:before {
+    content: "\ea40";
+}

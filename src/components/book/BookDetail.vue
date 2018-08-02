@@ -20,7 +20,17 @@
                 <p><b>Дата выхода в тираж:</b> {{ book.circulationDate }}</p>
             </div>
         </div>
-        <router-link class="btn book_edit_link" :to="{name: 'edit-book'}">Редактировать книгу</router-link>
+        <router-link
+                class="btn book_edit_link"
+                :to="{name: 'edit-book'}">
+            Редактировать книгу
+        </router-link>
+        <router-link
+                class="btn back_link icon_back"
+                :to="{name: 'home'}">
+            Вернуться к списку книг
+        </router-link>
+
     </div>
 </template>
 

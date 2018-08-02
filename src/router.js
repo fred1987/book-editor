@@ -1,25 +1,50 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+import VueRouter from 'vue-router'
+import store from './store'
 import Home from './views/Home.vue'
+import Book from './views/Book.vue'
+import Add from './views/Add.vue'
+import EditBook from './views/EditBook.vue'
 
-Vue.use(Router)
+Vue.use(VueRouter)
 
-export default new Router({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes: [
+const routes = [
     {
-      path: '/',
-      name: 'home',
-      component: Home
+        path: '/',
+        name: 'home',
+        component: Home
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+        path: '/add',
+        component: Add,
+        name: 'add'
+    },
+    {
+        path: '/:book',
+        name: 'book',
+        component: Book
+    },
+    {
+        path: '/:book/edit',
+        component: EditBook,
+        name: 'edit-book'
     }
-  ]
+]
+
+const router = new VueRouter({
+    mode: 'history',
+    routes
+});
+
+router.beforeEach((to, from, next) => {
+    if (!store.state.loaded) store.dispatch('getBooks')
+    if (to.params.hasOwnProperty('book')) {
+        store.commit('book', {ISBN: to.params.book})
+        next()
+    } else {
+        store.commit('clearBook')
+        next()
+    }
 })
+
+export default router

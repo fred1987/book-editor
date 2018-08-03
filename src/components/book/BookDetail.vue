@@ -62,6 +62,8 @@
 
     .book img {
         width: 100%;
+        justify-self: center;
+        max-width: 300px;
     }
 
     .book_data {
@@ -72,5 +74,15 @@
     .book_edit_link {
         float: right;
         margin: 20px 0 0 0;
+    }
+
+    .book_data p:last-child {
+        margin: 0;
+    }
+
+    @media only screen and (max-width: 630px) {
+        .book {
+            grid-template-columns: 1fr;
+        }
     }
 </style>

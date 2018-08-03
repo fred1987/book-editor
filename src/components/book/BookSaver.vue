@@ -12,7 +12,7 @@
                             data-vv-as="Обложка книги"
                             data-vv-name="img"
                             @change="imgChange"
-                            v-validate="'mimes:image/*|size:2000'">
+                            v-validate="'mimes:image/*|size:2048'">
                     <img
                             ref="img_upload"
                             v-show="imgSrc"
@@ -45,6 +45,7 @@
                         <input
                                 type="text"
                                 name="ISBN"
+                                data-vv-name="ISBN"
                                 v-model.trim="ISBN"
                                 placeholder="978-5-699-77398-5"
                                 v-validate="{regex: /^(?:ISBN(?:-1[03])?:? )?(?=[-0-9 ]{17}$|[-0-9X ]{13}$|↵[0-9X]{10}$)(?:97[89][- ]?)?[0-9]{1,5}[- ]?(?:[0-9]+[- ]?){2}[0-9X]$/}">
@@ -129,6 +130,13 @@
             </button>
         </form>
         <router-link
+                v-if="isBook"
+                class="btn back_link icon_back"
+                :to="{name: 'book', params: {book: book.ISBN}}">
+            Вернуться к книгe
+        </router-link>
+        <router-link
+                v-else
                 class="btn back_link icon_back"
                 :to="{name: 'home'}">
             Вернуться к списку книг
@@ -138,6 +146,7 @@
 
 <script>
     import {mapState} from 'vuex'
+    import {ErrorBag} from 'vee-validate';
     import cyrillicToTranslit from 'cyrillic-to-translit-js'
 
     export default {
@@ -203,7 +212,7 @@
                                 let img = this.$refs.img_upload
                                 img.src = reader.result
                                 img.onload = () => {
-                                    this.getBase64(img)
+                                    this.imgSrc = this.getBase64(img)
                                 }
                             }
                             reader.readAsDataURL(el.files[0])
@@ -218,12 +227,19 @@
                 canvas.height = img.naturalHeight
                 let ctx = canvas.getContext('2d')
                 ctx.drawImage(img, 0, 0)
-                this.imgSrc = canvas.toDataURL('image/png')
+                return canvas.toDataURL('image/png')
             },
             saveBook(e) {
                 let elements = e.target.elements
                 this.$validator.validate().then(result => {
                     if (result) {
+                        let sameBook = this.$store.state.books.find(book => book.ISBN === elements.ISBN.value)
+                        if (sameBook && !this.isBook) {
+                            this.$validator.errors.add({
+                                field: 'ISBN', msg: 'Книга с таким ISBN уже сохранена'
+                            })
+                            return false
+                        }
                         let authors = this.authors.filter(x => x.name !== '' && x.surname !== '')
                         let data = {
                             titleTranslit: cyrillicToTranslit().transform(elements.title.value.toLowerCase(), '_'),
@@ -294,27 +310,27 @@
         grid-column: 1/-1;
     }
 
-    label:nth-child(4) .author_wrap {
+    .author_wrap {
         display: grid;
         grid-gap: 20px;
         margin-bottom: 20px;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
 
-    label:nth-child(4) .author_wrap button {
+    .author_wrap button {
         grid-column: -1/-1;
     }
 
     .img_upload {
         position: relative;
         overflow: hidden;
-        align-self: center;
         min-height: 200px;
         background-color: #fff;
     }
 
     .img_upload.active {
         min-height: 0;
+        align-self: center;
     }
 
     .img_upload:before {
@@ -403,6 +419,44 @@
         list-style: none;
         margin-bottom: 7px;
         color: #a94442;
+    }
+
+    ul.errors li:last-child {
+        margin: 0;
+    }
+
+    @media only screen and (max-width: 992px) {
+        .inputs_wrap {
+            grid-template-columns: repeat(1, minmax(200px, 1fr));
+        }
+
+        .author_wrap {
+            display: grid;
+            grid-gap: 20px;
+            grid-template-columns: repeat(1, minmax(200px, 1fr));
+        }
+
+        .author_wrap:not(:nth-child(2)) {
+            margin-top: 50px;
+        }
+
+        .author_wrap button {
+            grid-column: 1/1;
+            align-self: center;
+            justify-self: center;
+            width: 100px;
+        }
+    }
+
+    @media only screen and (max-width: 630px) {
+        .form_wrap {
+            grid-template-columns: 1fr;
+        }
+
+        .img_upload {
+            justify-self: center;
+            max-width: 300px;
+        }
     }
 </style>
 

@@ -20,7 +20,6 @@ export default new Vuex.Store({
                         if (a.title < b.title) {
                             return -1
                         }
-                        localStorage.setItem('books', JSON.stringify(store.state.books))
                         return 0
                     case 'year':
                         return a.year - b.year

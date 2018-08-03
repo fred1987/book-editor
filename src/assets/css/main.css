@@ -173,3 +173,17 @@ footer {
     background: #1E1C1C;
     position: relative;
 }
+
+@media only screen and (max-width: 630px) {
+    h1 {
+        text-align: center;
+    }
+
+    main .btn:not(.icon_cross) {
+        float: none !important;
+        display: block !important;
+        margin: 20px 0 0 0 !important;
+        width: 100%;
+        text-align: center;
+    }
+}

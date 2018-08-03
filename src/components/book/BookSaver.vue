@@ -456,6 +456,7 @@
         .img_upload {
             justify-self: center;
             max-width: 300px;
+            min-height: 200px;
         }
     }
 </style>

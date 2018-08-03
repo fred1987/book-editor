@@ -1,6 +1,6 @@
 <template>
     <main>
-        <save-book/>
+        <save-book :key="isAdd"/>
     </main>
 </template>
 
@@ -9,6 +9,11 @@
 
     export default {
         name: 'edit_book_page',
-        components: {SaveBook}
+        components: {SaveBook},
+        computed: {
+            isAdd() {
+                return (Object.keys(this.$store.state.book).length !== 0) ? 1 : 2
+            }
+        }
     }
 </script>

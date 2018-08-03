@@ -1,4 +1,4 @@
-# book-editor
+# Book Editor
 
 ## Project setup
 ```
